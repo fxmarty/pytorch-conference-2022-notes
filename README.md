@@ -1,12 +1,4 @@
----
-gists:
-  - id: e4e9f07a1fe6e975bc5a3cacfc8a0560
-    url: 'https://gist.github.com/e4e9f07a1fe6e975bc5a3cacfc8a0560'
-    createdAt: '2022-12-02T17:33:30Z'
-    updatedAt: '2022-12-02T17:33:30Z'
-    filename: PyTorch Conference.md
-    isPublic: false
----
+
 PyTorch 2.0 reference: https://pytorch.org/get-started/pytorch-2.0/
 HF/TIMM reference: https://pytorch.org/blog/Accelerating-Hugging-Face-and-TIMM-models/
 
