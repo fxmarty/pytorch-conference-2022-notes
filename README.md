@@ -16,7 +16,7 @@ HF/TIMM reference: https://pytorch.org/blog/Accelerating-Hugging-Face-and-TIMM-m
 * For ML scientists, goal: 30% faster PyTorch with no change to the frontend code, lower memory usage
 
 Reference models to benchmark:
-![[imagesPyTorch Conference2.png]]
+![](imagesPyTorch_Conference2.png)
 **without touching the code itself**, and robust to correctness and accuracy
 
 Some older ideas:
@@ -33,7 +33,7 @@ Step of building a compiler:
 ## torchdynamo
 
 * dynamo finds blocks that can be compiled, and those that can't be compiled.
-![[imagesPyTorch Conference3.png]]
+![](imagesPyTorch_Conference3.png)
 
 Analyze the bytecode directly?
 
@@ -41,7 +41,7 @@ Internally: have been happy with torchdynamo for graph acquisition.
 
 ### How gradient is handled?
 
-![[imagesPyTorch Conference4.png]]
+![](imagesPyTorch_Conference4.png)
 
 2000+ operators in pytorch!!!!
 ==> How to make it easier to write backends for pytorch?
@@ -54,9 +54,9 @@ Idea: build a primitive opset (smaller sample representing all ops)
 Other than TorchInductor nvFuser, TensorRT, etc
 
 As of today out of the box:
-![[Pasted image 20221202162820.png]]
-![[imagesPyTorch Conference7.png]]
-![[Pasted image 20221202162912.png]]
+![](Pasted_image_20221202162820.png)
+![](imagesPyTorch_Conference7.png)
+![](Pasted_image_20221202162912.png)
 
 * This is on A100!!!! On other GPU the speedup is lower. The faster and bigger GPU, the more eager mode can not keep up and you need to introduce a compiler.
 
@@ -66,7 +66,7 @@ Different mode to have different compilation time, suitable e.g. for different s
 
 TorchInductor is the default backend. **dynamic shape** support.
 
-![[imagesPyTorch Conference8.png]]
+![](imagesPyTorch_Conference8.png)
 * dynamic better than static shape + padding
 
 * fullgraph mode for traditional compiler (e.g. TensorRT), to not have partial graphs.
@@ -80,7 +80,7 @@ In terms of user experience, it's **really new**. Call it PyTorch 2.0 ==> stable
 
 ### Roadmap for 2.x
 
-![[imagesPyTorch Conference9.png]]
+![](imagesPyTorch_Conference9.png)
 
 * Open to community contribution for this. Q/A webinar later in the months with devs of PyTorch.
 * **Fully backward compatible.**
@@ -94,9 +94,9 @@ In terms of user experience, it's **really new**. Call it PyTorch 2.0 ==> stable
 
 ### in a nutshell
 
-![[imagesPyTorch Conference9-1.png]]
+![](imagesPyTorch_Conference9-1.png)
 
-![[imagesPyTorch Conference10.png]]
+![](imagesPyTorch_Conference10.png)
 
 * partial graph capture. Skipped unwanted part of eager
 * guarded graph: make sure the captured graph is correct, jit recapturing
@@ -117,20 +117,20 @@ Techs:
 * Dynamic shapes & strides: use sympy to reason about shapes, indexing
 * Compiler generates **OpenAI Triton** code on GPU, C++ code on CPU.
 
-![[imagesPyTorch Conference11.png]]
+![](imagesPyTorch_Conference11.png)
 
 `ops` can be overriden. Makes it easy to write a backend?
 
 Use fx (where?)
 
 Stack:
-![[imagesPyTorch Conference12.png]]
+![](imagesPyTorch_Conference12.png)
 
 TorchInductor results:
-![[imagesPyTorch Conference12-1.png]]
+![](imagesPyTorch_Conference12-1.png)
 
 On CPU:
-![[imagesPyTorch Conference13.png]]
+![](imagesPyTorch_Conference13.png)
 
 ## Michael Suo: PyTorch 2.x export path, mid/long term
 
@@ -147,14 +147,14 @@ Want to interoperate with a variety of backends.
 Produce a single graph out of the model. Definie the primitive operator set (smaller than the 2k+!)
 
 torch.compile:
-![[imagesPyTorch Conference14.png]]
+![](imagesPyTorch_Conference14.png)
 * Guards are attached to the partial graphs, that can be recompiled just in time
 
 Majority of PyTorch users will be just happy with this.
 
 But, we may want to capture the entire model as a SINGLE graph: `torch._dynamo.export(my_func, input)`
 
-![[imagesPyTorch Conference14-1.png]]
+![](imagesPyTorch_Conference14-1.png)
 
 ### What are we actually exporting?
 
@@ -182,7 +182,7 @@ In eager mode:
 * Python --> C++ --> kernels (for each input)
 
 in 2.0:
-![[imagesPyTorch Conference14-2.png]]
+![](imagesPyTorch_Conference14-2.png)
 Reuse of the static representation.
 
 **BUT:** all the Python/C++/kernels can depend on the shapes.
@@ -190,13 +190,13 @@ Reuse of the static representation.
 Use symbolic values for shapes? Symbolic tensors?
 
 resnet
-![[imagesPyTorch Conference15.png]]
+![](imagesPyTorch_Conference15.png)
 last shape is non trivial but known symbolically through sympy
 
 ### What about shapes due to controlflow?
 * introduce guards to controlflow? A case required for the graph to be correct, and checked JIT?? Then, if not good, we know we need to retrace and recompile.
 
-![[imagesPyTorch Conference15-1.png]]
+![](imagesPyTorch_Conference15-1.png)
 
 Perf results above in the intro:
 * PT latency with eager grows smoothly.
@@ -210,11 +210,11 @@ Perf results above in the intro:
 System to reason about symbolic shapes in PyTorch. For example: symbolically check your function, the shapes (will I result in an error?). Count FLOPS symbolically.
 
 Contributors:
-![[imagesPyTorch Conference16.png]]
+![](imagesPyTorch_Conference16.png)
 
 ## Anjali Sridhar: PyTorch distributed: scaling workloads
 
-![[imagesPyTorch Conference16-1.png]]
+![](imagesPyTorch_Conference16-1.png)
 
 Add Dynamo support for DDP? decorator as `@torch.compile()` to optimized the DDP wrapped modules.
 
@@ -230,11 +230,11 @@ Goal: automatically split/shard a model.
 
 Tensor parallelism:
 * DTensor?
-*![[imagesPyTorch Conference17.png]]
+![](imagesPyTorch_Conference17.png)
 * works in place
 
 Ressources:
-![[Pasted image 20221202172558.png]]
+![](Pasted_image_20221202172558.png)
 
 ## Dennis van der Staay: torchrec
 
@@ -249,13 +249,13 @@ Deploy eager-mode PyTorch?
 Run multiple python interpreters within a single code. It is a C++ library targetting deployment on Linux x86_64
 
 Hello world of torch::deploy:
-![[imagesPyTorch Conference19.png]]
+![](imagesPyTorch_Conference19.png)
 
 Get a wrapped PyThon object in C++. How different is it from PyTorch C++ frontend?
 
 No modification to the model required. Share the same model across multiple python interpreters. libtorch/aten backend is the same so no extra copies of the model required (this is cool for GPU no?)
 
-![[imagesPyTorch Conference19-1.png]]
+![](imagesPyTorch_Conference19-1.png)
 * shared libtorch C++ but duplicate libpython?
 
 Support for custom linked, to load arbitrary C extensions
